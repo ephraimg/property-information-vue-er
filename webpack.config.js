@@ -62,13 +62,13 @@ if (process.env.NODE_ENV === 'production') {
   module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"',
-        API_KEY: '"XJEN8GDDUT0AEHY41SYR"',
-        API_SECRET: '"CMpJLhlCJrDHujL82hgy5b6EgVvnA10X"'
-      }
-    }),
+    // new webpack.DefinePlugin({
+    //   'process.env': {
+    //     NODE_ENV: '"production"', // already set 
+    //     API_KEY: '"XJEN8GDDUT0AEHY41SYR"', // more easily set by host (Netlify)
+    //     API_SECRET: '"CMpJLhlCJrDHujL82hgy5b6EgVvnA10X"'
+    //   }
+    // }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
@@ -77,6 +77,17 @@ if (process.env.NODE_ENV === 'production') {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
+    })
+  ])
+}
+
+else { // if not production (e.g., local development)
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new webpack.DefinePlugin({
+      "process.env": {
+        "API_KEY": JSON.stringify("XJEN8GDDUT0AEHY41SYR"), // there is a dotenv webpack plugin, if separation is desired
+        "API_SECRET": JSON.stringify("CMpJLhlCJrDHujL82hgy5b6EgVvnA10X") // probably different for dev then prod anyway
+      }
     })
   ])
 }
