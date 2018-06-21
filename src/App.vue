@@ -44,8 +44,6 @@
   export default {
     data () {
       return {
-        API_KEY: 'XJEN8GDDUT0AEHY41SYR',
-        API_SECRET: 'CMpJLhlCJrDHujL82hgy5b6EgVvnA10X',
         address: '1427 12th St, Oakland, CA 94607',
         fixed: true,
         showingDetails: false,
@@ -97,17 +95,18 @@
         this.showingDetails = !this.showingDetails;
       }
     },
-    created: function () {
+    created() { // I'd caution against burning through your API budget due to hot reloading (button?)
       axios({
         method: 'get',
         url: 'https://cors-anywhere.herokuapp.com/https://api.housecanary.com/v2/property/details?address=1427+12th+St&zipcode=94607',
         auth: {
-            username: this.API_KEY,
-            password: this.API_SECRET 
+            username: process.env.API_KEY,
+            password: process.env.API_SECRET 
         }
       }).then(res => {
         this["property/details"] = res.data[0]["property/details"];
-      });
+      })
+      .catch(console.error); // log errors
     }
   }
 </script>
